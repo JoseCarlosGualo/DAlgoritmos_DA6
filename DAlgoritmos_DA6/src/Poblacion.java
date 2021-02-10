@@ -57,7 +57,7 @@ public class Poblacion {
 	public int getCoordenadasXPares() {
 		int resultado = 0;
 		for (Nodo n : this.lista_nodos) {
-			if ((n.getX() % 2.0) == 0.0) {
+			if (((int) n.getX() % 2) == 0) {
 				resultado++;
 			}
 		}
