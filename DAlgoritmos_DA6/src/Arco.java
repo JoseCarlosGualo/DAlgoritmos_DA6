@@ -2,10 +2,9 @@
 public class Arco {
 	private Nodo nodo_origen;
 	private Nodo nodo_destino;
-	private String length;
+	private double length;
 
-	public Arco(Nodo nodo_origen, Nodo nodo_destino, String length) {
-		super();
+	public Arco(Nodo nodo_origen, Nodo nodo_destino, double length) {
 		this.nodo_origen = nodo_origen;
 		this.nodo_destino = nodo_destino;
 		this.length = length;
@@ -30,11 +29,11 @@ public class Arco {
 		this.nodo_destino = nodo_destino;
 	}
 
-	public String getLength() {
+	public double getLength() {
 		return length;
 	}
 
-	public void setLength(String length) {
+	public void setLength(double length) {
 		this.length = length;
 	}
 

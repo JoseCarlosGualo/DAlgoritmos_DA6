@@ -1,11 +1,10 @@
 
 public class Nodo {
-	private String x;
-	private String y;
+	private double x;
+	private double y;
 	private String id_nodo;
 
-	public Nodo(String x, String y, String id_nodo) {
-		super();
+	public Nodo(double x, double y, String id_nodo) {
 		this.x = x;
 		this.y = y;
 		this.id_nodo = id_nodo;
@@ -14,19 +13,19 @@ public class Nodo {
 	public Nodo() {
 	}
 
-	public String getX() {
+	public double getX() {
 		return x;
 	}
 
-	public void setX(String x) {
+	public void setX(double x) {
 		this.x = x;
 	}
 
-	public String getY() {
+	public double getY() {
 		return y;
 	}
 
-	public void setY(String y) {
+	public void setY(double y) {
 		this.y = y;
 	}
 
