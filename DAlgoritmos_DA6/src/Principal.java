@@ -10,9 +10,22 @@ import org.xml.sax.SAXException;
 
 public class Principal {
 	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException {
+		/*
+		 * PRIMERA ENTREGA ArrayList<String> lista_archivos = getListaXML();
+		 * ArrayList<Poblacion> lista_poblaciones =
+		 * getPoblacionesFromXML(lista_archivos); exportarSolucion(lista_poblaciones);
+		 */
+
+		// SEGUNDA ENTREGA
 		ArrayList<String> lista_archivos = getListaXML();
-		ArrayList<Poblacion> lista_poblaciones = getPoblacionesFromXML(lista_archivos);
-		exportarSolucion(lista_poblaciones);
+		ArrayList<Grafo> lista_grafos = getGrafosFromXML(lista_archivos);
+
+		for (int i = 0; i < 1; i++) {
+			Grafo g = lista_grafos.get(i);
+			g.relacionaNodoArco();
+			g.toStringGrafo();
+			System.out.println(g.getLista_nodos().size());
+		}
 
 	}
 
@@ -63,13 +76,27 @@ public class Principal {
 		LeerXMLSAX leerXML = new LeerXMLSAX();
 		for (String nombre_archivo : lista_archivos) {
 			try {
-				lista_poblaciones.add(leerXML.leerXMLSAX(nombre_archivo));
+				lista_poblaciones.add(leerXML.leerXMLSAX_Poblaciones(nombre_archivo));
 			} catch (ParserConfigurationException | SAXException | IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 		return lista_poblaciones;
+	}
+
+	public static ArrayList<Grafo> getGrafosFromXML(ArrayList<String> lista_archivos) {
+		ArrayList<Grafo> lista_grafos = new ArrayList<Grafo>();
+		LeerXMLSAX leerXML = new LeerXMLSAX();
+		for (String nombre_archivo : lista_archivos) {
+			try {
+				lista_grafos.add(leerXML.leerXMLSAX_Grafo(nombre_archivo));
+			} catch (ParserConfigurationException | SAXException | IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return lista_grafos;
 	}
 
 }

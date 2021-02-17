@@ -89,14 +89,11 @@ public class SAXHandler extends DefaultHandler {
 		case "key":
 			if (attributes.getValue("attr.name").equalsIgnoreCase("length")) {
 				id_length = attributes.getValue("id");
-			}
-			if (attributes.getValue("attr.name").equalsIgnoreCase("x")) {
+			} else if (attributes.getValue("attr.name").equalsIgnoreCase("x")) {
 				id_x = attributes.getValue("id");
-			}
-			if (attributes.getValue("attr.name").equalsIgnoreCase("y")) {
+			} else if (attributes.getValue("attr.name").equalsIgnoreCase("y")) {
 				id_y = attributes.getValue("id");
-			}
-			if (attributes.getValue("attr.name").equalsIgnoreCase("name")) {
+			} else if (attributes.getValue("attr.name").equalsIgnoreCase("name")) {
 				id_nombre = attributes.getValue("id");
 			}
 			break;
