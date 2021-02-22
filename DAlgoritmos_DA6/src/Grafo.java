@@ -1,12 +1,22 @@
 import java.util.ArrayList;
 
 public class Grafo {
+	String nombre_poblacion;
 	private ArrayList<Arco> lista_arcos;
 	private ArrayList<Nodo> lista_nodos;
 
-	public Grafo(ArrayList<Arco> lista_arcos, ArrayList<Nodo> lista_nodos) {
+	public Grafo(String nombre_poblacion, ArrayList<Arco> lista_arcos, ArrayList<Nodo> lista_nodos) {
+		this.nombre_poblacion = nombre_poblacion;
 		this.lista_arcos = lista_arcos;
 		this.lista_nodos = lista_nodos;
+	}
+
+	public String getNombre_poblacion() {
+		return nombre_poblacion;
+	}
+
+	public void setNombre_poblacion(String nombre_poblacion) {
+		this.nombre_poblacion = nombre_poblacion;
 	}
 
 	public ArrayList<Arco> getLista_arcos() {
@@ -48,7 +58,7 @@ public class Grafo {
 			if (!n.getLista_arcos().isEmpty()) {
 				n.toStringLista();
 			}
-			
+
 		}
 	}
 }

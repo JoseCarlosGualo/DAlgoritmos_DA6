@@ -32,7 +32,7 @@ public class LeerXMLSAX {
 		SAXHandler handler = new SAXHandler();
 		saxParser.parse(file, handler);
 
-		Grafo grafo = new Grafo(handler.getLista_arcos(), handler.getLista_nodos());
+		Grafo grafo = new Grafo(handler.getNombre_poblacion(), handler.getLista_arcos(), handler.getLista_nodos());
 		return grafo;
 	}
 }
