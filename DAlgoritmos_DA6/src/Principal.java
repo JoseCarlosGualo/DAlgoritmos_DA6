@@ -13,10 +13,9 @@ public class Principal {
 
 		ArrayList<String> lista_archivos = getListaXML();
 		ArrayList<Grafo> lista_grafos = getGrafosFromXML(lista_archivos);
-		System.out.println(lista_grafos.get(0).getXmaxima());
-		System.out.println(lista_grafos.get(0).getYmaxima());
-		// lista_grafos.get(1).dibujarGrafo();
-
+		for(Grafo g : lista_grafos) {
+			g.dibujarGrafo();
+		}
 	}
 
 	public static ArrayList<String> getListaXML() {

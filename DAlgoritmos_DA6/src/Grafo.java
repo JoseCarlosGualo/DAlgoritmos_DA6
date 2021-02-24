@@ -1,10 +1,16 @@
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
+import javax.sound.sampled.Line;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -98,21 +104,61 @@ public class Grafo {
 		}
 		return max;
 	}
+	
+	public double getXminima() {
+		double min = Double.MAX_VALUE;
+		for (Nodo n : this.lista_nodos) {
+			if (Math.abs(n.getX()) < min) {
+				min = Math.abs(n.getX());
+			}
+		}
+		return min;
+	}
+
+	public double getYminima() {
+		double min = Double.MAX_VALUE;
+		for (Nodo n : this.lista_nodos) {
+			if (Math.abs(n.getY()) < min) {
+				min = Math.abs(n.getY());
+			}
+		}
+		return min;
+	}
 
 	public void dibujarGrafo() throws IOException {
-		int width = 900;
-		int height = 900;
+		int width = 2000;
+		int height = 2000;
+		
+		double Xmaxima = this.getXmaxima();
+		double Ymaxima = this.getYmaxima();
+		double diffX = Xmaxima - this.getXminima();
+		double diffY = Ymaxima - this.getYminima();
+
 
 		BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		Graphics2D g2d = bufferedImage.createGraphics();
-		g2d.setBackground(Color.WHITE);
-		
+
 		for (Arco a : this.lista_arcos) {
-			
+			g2d.setStroke(new BasicStroke(2));
+			g2d.setColor(Color.WHITE);
+			g2d.draw(new Line2D.Double(((Xmaxima - Math.abs(a.getNodo_origen().getX()))/diffX)*width, ((Ymaxima - Math.abs(a.getNodo_origen().getY()))/diffY)*height,
+					((Xmaxima - Math.abs(a.getNodo_destino().getX()))/diffX)*width, ((Ymaxima - Math.abs(a.getNodo_destino().getY()))/diffY)*height));
+
+		}
+		
+		for (Nodo n : this.lista_nodos) {
+			g2d.setStroke(new BasicStroke(2));
+			g2d.setColor(Color.RED);
+			double xnodo = (((Xmaxima - Math.abs(n.getX()))/diffX)*width)-2;
+			double ynodo = (((Ymaxima - Math.abs(n.getY()))/diffY)*height)-2;
+			g2d.draw(new Ellipse2D.Double(xnodo, ynodo, 4, 4));
 		}
 		
 		g2d.dispose();
-		File file = new File(this.nombre_poblacion + ".png");
+		File miDir = new File("ImagenesPoblaciones");
+		miDir.mkdirs();
+
+		File file = new File(miDir.getCanonicalPath() + "\\" + this.nombre_poblacion + ".png");
 		ImageIO.write(bufferedImage, "png", file);
 	}
 
