@@ -13,8 +13,9 @@ public class Principal {
 
 		ArrayList<String> lista_archivos = getListaXML();
 		ArrayList<Grafo> lista_grafos = getGrafosFromXML(lista_archivos);
-		for(Grafo g : lista_grafos) {
+		for (Grafo g : lista_grafos) {
 			g.dibujarGrafo();
+			g.crear_graphml();
 		}
 	}
 
