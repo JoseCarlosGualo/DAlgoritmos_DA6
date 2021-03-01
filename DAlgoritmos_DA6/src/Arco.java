@@ -1,13 +1,22 @@
-
 public class Arco {
 	private Nodo nodo_origen;
 	private Nodo nodo_destino;
 	private double length;
+	private String id;
 
-	public Arco(Nodo nodo_origen, Nodo nodo_destino, double length) {
+	public Arco(String id,Nodo nodo_origen, Nodo nodo_destino, double length) {
 		this.nodo_origen = nodo_origen;
 		this.nodo_destino = nodo_destino;
 		this.length = length;
+		this.id = id;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public Arco() {

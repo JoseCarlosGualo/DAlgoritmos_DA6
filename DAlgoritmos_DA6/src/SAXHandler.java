@@ -13,11 +13,13 @@ public class SAXHandler extends DefaultHandler {
 	private boolean d_x = false;
 	private boolean d_length = false;
 	private boolean d_nombre = false;
+	private boolean d_arco = false;
 	private String id_nombre = "";
 	private String id_y = "";
 	private String id_x = "";
 	private String id_length = "";
 	private String nombre_poblacion = "";
+	private String id_arco = "";
 
 	@Override
 	public void characters(char[] ch, int start, int length) throws SAXException {
@@ -42,6 +44,9 @@ public class SAXHandler extends DefaultHandler {
 			} else if (d_nombre) {
 				nombre_poblacion = buffer.toString();
 				d_nombre = false;
+			} else if (d_arco) {
+				arco.setId(buffer.toString());
+				d_arco = false;
 			}
 			break;
 		case "edge":
@@ -71,6 +76,8 @@ public class SAXHandler extends DefaultHandler {
 				d_y = true;
 			} else if (attributes.getValue("key").equalsIgnoreCase(id_nombre)) {
 				d_nombre = true;
+			} else if (attributes.getValue("key").equalsIgnoreCase(id_arco)) {
+				d_arco = true;
 			}
 
 			break;
@@ -79,6 +86,7 @@ public class SAXHandler extends DefaultHandler {
 			lista_arcos.add(arco);
 			arco.setNodo_origen(getNodoFromList(lista_nodos, attributes.getValue("source")));
 			arco.setNodo_destino(getNodoFromList(lista_nodos, attributes.getValue("target")));
+			
 
 			// cambiarlo por excepciones
 			if (arco.getNodo_origen() == null || arco.getNodo_destino() == null) {
@@ -95,6 +103,8 @@ public class SAXHandler extends DefaultHandler {
 				id_y = attributes.getValue("id");
 			} else if (attributes.getValue("attr.name").equalsIgnoreCase("name")) {
 				id_nombre = attributes.getValue("id");
+			} else if (attributes.getValue("attr.name").equalsIgnoreCase("osmid") && attributes.getValue("for").equalsIgnoreCase("edge")) {
+				id_arco = attributes.getValue("id");
 			}
 			break;
 

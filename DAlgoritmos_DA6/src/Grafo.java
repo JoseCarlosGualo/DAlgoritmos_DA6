@@ -189,10 +189,12 @@ public class Grafo {
 
 		ArrayList<String> attr_names = new ArrayList<String>();
 		ArrayList<String> ids = new ArrayList<String>();
+		attr_names.add("id_edge");
 		attr_names.add("length");
 		attr_names.add("x");
 		attr_names.add("y");
 		attr_names.add("name");
+		ids.add("d4");
 		ids.add("d3");
 		ids.add("d2");
 		ids.add("d1");
@@ -202,11 +204,13 @@ public class Grafo {
 		Element edge;
 		Element graph;
 		Element data;
+		Element data2;
 		Attr attr_name;
 		Attr attr_id;
 		Attr source_node;
 		Attr target_node;
 		Attr attr_key;
+		Attr attr_key2;
 		Text text;
 
 		try {
@@ -272,6 +276,13 @@ public class Grafo {
 				text = documento.createTextNode(String.valueOf(a.getLength()));
 				data.appendChild(text);
 				edge.appendChild(data);
+				data2 = documento.createElement("data");
+				attr_key2 = documento.createAttribute("key");
+				attr_key2.setValue("d4");
+				data2.setAttributeNode(attr_key2);
+				text = documento.createTextNode(String.valueOf(a.getId()));
+				data2.appendChild(text);
+				edge.appendChild(data2);
 				graph.appendChild(edge);
 			}
 
