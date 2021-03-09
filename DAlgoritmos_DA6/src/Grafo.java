@@ -314,9 +314,64 @@ public class Grafo {
 		}
 	}
 
+	// metodo que devuelve el nombre de la poblacion
 	public String separarNombre() {
 		System.out.println(this.nombre_poblacion.split(",")[0]);
 		return this.nombre_poblacion.split(",")[0];
 	}
 
+	public int partition(ArrayList<Arco> a, int left, int right) {
+		return HoarePartition(a, left, right); // Using Hoare partition
+	}
+
+	/**
+	 * Method implementing Hoare's partition
+	 * 
+	 * @param a     The array to partition
+	 * @param left  Starting index of subarray
+	 * @param right Finish index of subarray
+	 * @return The pivot position
+	 */
+	public int HoarePartition(ArrayList<Arco> a, int left, int right) {
+		int l = left, r = right + 1;
+		double p = a.get(left).getLength(), aux;
+		while (l < r) {
+			while (l < right && a.get(++l).getLength() < p)
+				;
+			while (r > left && p < a.get(--r).getLength())
+				;
+			if (l < r) {
+				aux = a.get(l).getLength();
+				a.get(l).setLength(a.get(r).getLength());
+				a.get(r).setLength(aux);
+			}
+		}
+		a.get(left).setLength(a.get(r).getLength());
+		a.get(r).setLength(p);
+		return r;
+	}
+
+	/**
+	 * Wrapper method for calling the actual, divide and conquer, quicksort method.
+	 * 
+	 * @param array The array to sort. Ii is sorted at the end.
+	 */
+	public void quicksort() {
+		quicksortRec(this.lista_arcos, 0, this.lista_arcos.size() - 1);
+	}
+
+	/**
+	 * Quicksort.
+	 * 
+	 * @param array The array to sort. Ii is sorted at the end.
+	 * @param left  Starting index of subarray.
+	 * @param right Finish index of subarray,
+	 */
+	public void quicksortRec(ArrayList<Arco> array, int left, int right) {
+		if (left < right) {
+			int p = partition(array, left, right); // Divide
+			quicksortRec(array, left, p - 1); // Conquer
+			quicksortRec(array, p + 1, right);
+		}
+	}
 }

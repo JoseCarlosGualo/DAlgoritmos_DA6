@@ -13,10 +13,15 @@ public class Principal {
 
 		ArrayList<String> lista_archivos = getListaXML();
 		ArrayList<Grafo> lista_grafos = getGrafosFromXML(lista_archivos);
-		for (Grafo g : lista_grafos) {
-			g.dibujarGrafo();
-			g.crear_graphml();
+		/*
+		 * for (Grafo g : lista_grafos) { g.dibujarGrafo(); g.crear_graphml(); }
+		 */
+		Grafo g = lista_grafos.get(0);
+		g.quicksort();
+		for (Arco a : g.getLista_arcos()) {
+			System.out.println(a.getLength());
 		}
+		System.out.println("Final");
 	}
 
 	public static ArrayList<String> getListaXML() {
