@@ -1,4 +1,6 @@
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.xml.parsers.ParserConfigurationException;
@@ -8,25 +10,38 @@ import org.xml.sax.SAXException;
 
 public class Principal {
 	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException {
-		SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
-		SAXParser saxParser = saxParserFactory.newSAXParser();
-		File file = new File("Manzanares.graphml");
-		SAXHandler handler = new SAXHandler();
-		saxParser.parse(file, handler);
 
-		ArrayList<Nodo> lista_nodos = handler.getLista_nodos();
-		ArrayList<Arco> lista_arcos = handler.getLista_arcos();
-
-		for (Nodo n : lista_nodos) {
-			System.out.println(n);
+		ArrayList<String> lista_archivos = getListaXML();
+		ArrayList<Grafo> lista_grafos = getGrafosFromXML(lista_archivos);
+		for (Grafo g : lista_grafos) {
+			g.dibujarGrafo();
+			g.crear_graphml();
 		}
+	}
 
-		for (Arco a : lista_arcos) {
-			System.out.println(a);
+	public static ArrayList<String> getListaXML() {
+		ArrayList<String> nombre_xmls = new ArrayList<String>();
+		File miDir = new File("Poblaciones");
+		File[] listOfFiles = miDir.listFiles();
+		for (File file : listOfFiles) {
+			if (file.isFile()) {
+				try {
+					nombre_xmls.add(miDir.getCanonicalPath() + "\\" + file.getName());
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 		}
+		return nombre_xmls;
+	}
 
-		// System.out.println(handler.getId_length());
-
+	public static ArrayList<Grafo> getGrafosFromXML(ArrayList<String> lista_archivos) {
+		ArrayList<Grafo> lista_grafos = new ArrayList<Grafo>();
+		for (String nombre_archivo : lista_archivos) {
+			lista_grafos.add(new Grafo(nombre_archivo));
+		}
+		return lista_grafos;
 	}
 
 }
