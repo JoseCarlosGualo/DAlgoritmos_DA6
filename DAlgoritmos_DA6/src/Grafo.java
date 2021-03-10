@@ -102,6 +102,13 @@ public class Grafo {
 		this.lista_nodos.add(nodo);
 	}
 
+	public void addArco(Arco arco) {
+		if (this.lista_arcos == null) {
+			this.lista_arcos = new ArrayList<Arco>();
+		}
+		this.lista_arcos.add(arco);
+	}
+
 	public String toString() {
 		return "Grafo{" + "Poblacion=" + this.nombre_poblacion + ", nodos=" + this.lista_nodos.toString() + ", arcos="
 				+ this.lista_arcos.toString() + '}';
@@ -374,4 +381,73 @@ public class Grafo {
 			quicksortRec(array, p + 1, right);
 		}
 	}
+
+	public boolean hayCiclo(Grafo g, Arco verificar, Nodo terminal, String n) {
+		int i = 0;
+		ArrayList<Arco> aux = terminal.getArcosIncidentes(this.lista_arcos);
+		System.out.println("arcos incidentes: " + aux.toString());
+		System.out.println("lista arcos: " + this.lista_arcos.toString());
+		System.out.println(this.lista_arcos.size());
+		if (aux.size() == 0) {
+			return false;
+		}
+		if (terminal.isRelacion(aux, verificar.getNodo_origen())) {
+			return true;
+		}
+
+		for (Arco a : aux) {
+			// System.out.println(a.getNodo_destino().getId_nodo() + " " + n);
+			if (a.getNodo_destino().getId_nodo().equalsIgnoreCase(n) == false) {
+				System.out.println(i++);
+				if (hayCiclo(g, verificar, a.getNodo_destino(), terminal.getId_nodo())) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	public Grafo kruskal() {
+		Grafo arbol = new Grafo();
+		ArrayList<Nodo> nodos = (ArrayList<Nodo>) this.lista_nodos.clone();
+
+		arbol.setLista_nodos(nodos);
+
+		ArrayList<Arco> arcos = (ArrayList<Arco>) this.lista_arcos.clone();
+
+		Arco pro = arcos.get(0);
+		arbol.addArco(pro);
+		arcos.remove(pro);
+
+		while (arcos.size() != 0) {
+			pro = arcos.get(0);
+			if (hayCiclo(arbol, pro, pro.getNodo_destino(), pro.getNodo_destino().getId_nodo()) == false) {
+				arbol.addArco(pro);
+			}
+			arcos.remove(pro);
+		}
+		return arbol;
+	}
+
+	/*
+	 * public Grafo kruskal() { Grafo arbol = new Grafo(); ArrayList<Nodo> nodos =
+	 * (ArrayList<Nodo>) this.lista_nodos.clone(); arbol.setLista_nodos(nodos);
+	 * 
+	 * ArrayList<Arco> arcos = (ArrayList<Arco>) this.lista_arcos.clone();
+	 * 
+	 * ArrayList<Arco> v = (ArrayList<Arco>) this.lista_arcos.clone();
+	 * 
+	 * Arco pro = arcos.get(0); arbol.addArco(pro); arcos.remove(pro);
+	 * 
+	 * while (arcos.size() != 0) { pro = arcos.get(0); Nodo pro_origen =
+	 * pro.getNodo_origen(); Nodo pro_destino = pro.getNodo_destino();
+	 * ArrayList<Arco> va = pro_origen.getArcosIncidentes(arcos); ArrayList<Arco> vb
+	 * = pro_destino.getArcosIncidentes(arcos); if (!va.equals(vb)) { for (int i =
+	 * 0; i < va.size(); i++) v.remove(va.get(i)); for (int i = 0; i < vb.size();
+	 * i++) v.remove(vb.get(i)); for (int i = 0; i < va.size(); i++) { for (int j =
+	 * 0; j < vb.size(); j++) { if (va.get(i).equals(vb.get(j))) { v.add(va.get(i));
+	 * } } } arbol.addArco(pro); }
+	 * 
+	 * arcos.remove(pro); } return arbol; }
+	 */
 }

@@ -18,10 +18,13 @@ public class Principal {
 		 */
 		Grafo g = lista_grafos.get(0);
 		g.quicksort();
-		for (Arco a : g.getLista_arcos()) {
-			System.out.println(a.getLength());
-		}
-		System.out.println("Final");
+		Grafo kruskal = g.kruskal();
+		kruskal.dibujarGrafo();
+		System.out.println(g.getLista_arcos().size());
+		System.out.println(kruskal.getLista_arcos().size());
+
+		// System.out.println(kruskal.getLista_arcos().toString());
+		// System.out.println(kruskal.getLista_nodos().toString());
 	}
 
 	public static ArrayList<String> getListaXML() {

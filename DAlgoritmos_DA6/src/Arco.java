@@ -4,7 +4,7 @@ public class Arco {
 	private double length;
 	private String id;
 
-	public Arco(String id,Nodo nodo_origen, Nodo nodo_destino, double length) {
+	public Arco(String id, Nodo nodo_origen, Nodo nodo_destino, double length) {
 		this.nodo_origen = nodo_origen;
 		this.nodo_destino = nodo_destino;
 		this.length = length;
@@ -47,7 +47,7 @@ public class Arco {
 	}
 
 	public String toString() {
-		return "Arco{" + "Length=" + this.length + ", origen=" + this.nodo_destino.toString() + ", destino="
+		return "Arco{" + "Length=" + this.length + ", origen=" + this.nodo_origen.toString() + ", destino="
 				+ this.nodo_destino.toString() + '}';
 	}
 
