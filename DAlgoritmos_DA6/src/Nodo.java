@@ -4,15 +4,26 @@ public class Nodo {
 	private double x;
 	private double y;
 	private String id_nodo;
+	private int num_id;
 
 	public Nodo(double x, double y, String id_nodo) {
 		this.x = x;
 		this.y = y;
 		this.id_nodo = id_nodo;
+		
 	}
 
 	public Nodo() {
 	}
+	
+	public int getNum_id() {
+		return num_id;
+	}
+
+	public void setNum_id(int num_id) {
+		this.num_id = num_id;
+	}
+
 
 	public double getX() {
 		return x;
@@ -51,7 +62,7 @@ public class Nodo {
 
 	public boolean isRelacion(ArrayList<Arco> lista_arcos, Nodo origen) {
 		for (Arco a : lista_arcos) {
-			if (a.getNodo_destino().id_nodo.equalsIgnoreCase(origen.getId_nodo())) {
+			if (a.getNodo_destino().getId_nodo().equalsIgnoreCase(origen.getId_nodo())) {
 				return true;
 			}
 		}

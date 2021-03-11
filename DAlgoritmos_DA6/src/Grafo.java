@@ -382,12 +382,26 @@ public class Grafo {
 		}
 	}
 
-	public boolean hayCiclo(Grafo g, Arco verificar, Nodo terminal, String n) {
-		int i = 0;
+	public void removerCiclo(Grafo arbol) {
+		int parent[] = new int[lista_nodos.size()];
+		
+		for (int i=0; i<lista_nodos.size();++i) {
+			parent[i] = -1;
+			lista_nodos.get(i).setNum_id(i);
+		}
+		
+		for(int i=0; i<lista_arcos.size();++i) {
+			int x =  find(parent, lista_arcos.get(i).getNodo_origen().getNum_id());
+			int y =  find(parent, lista_arcos.get(i).getNodo_destino().getNum_id());
+			
+			if(x != y) {
+				union(parent,x,y);
+				arbol.addArco(lista_arcos.get(i));
+				
+			}
+		}
+		/*
 		ArrayList<Arco> aux = terminal.getArcosIncidentes(this.lista_arcos);
-		System.out.println("arcos incidentes: " + aux.toString());
-		System.out.println("lista arcos: " + this.lista_arcos.toString());
-		System.out.println(this.lista_arcos.size());
 		if (aux.size() == 0) {
 			return false;
 		}
@@ -396,39 +410,38 @@ public class Grafo {
 		}
 
 		for (Arco a : aux) {
-			// System.out.println(a.getNodo_destino().getId_nodo() + " " + n);
+			 System.out.println(a.getNodo_destino().getId_nodo() + " " + n);
 			if (a.getNodo_destino().getId_nodo().equalsIgnoreCase(n) == false) {
-				System.out.println(i++);
+
 				if (hayCiclo(g, verificar, a.getNodo_destino(), terminal.getId_nodo())) {
 					return true;
 				}
 			}
 		}
-		return false;
+		*/
 	}
 
 	public Grafo kruskal() {
 		Grafo arbol = new Grafo();
 		ArrayList<Nodo> nodos = (ArrayList<Nodo>) this.lista_nodos.clone();
-
 		arbol.setLista_nodos(nodos);
-
-		ArrayList<Arco> arcos = (ArrayList<Arco>) this.lista_arcos.clone();
-
-		Arco pro = arcos.get(0);
-		arbol.addArco(pro);
-		arcos.remove(pro);
-
-		while (arcos.size() != 0) {
-			pro = arcos.get(0);
-			if (hayCiclo(arbol, pro, pro.getNodo_destino(), pro.getNodo_destino().getId_nodo()) == false) {
-				arbol.addArco(pro);
-			}
-			arcos.remove(pro);
-		}
+		removerCiclo(arbol);
 		return arbol;
 	}
+	
+	public int find(int parent[], int i) {
+		if(parent[i] == -1)
+			return i;
+		return find(parent, parent[i]);
+	}
+	
+	public void union(int parent[], int x, int y) {
+		parent[x] = y;
+	}
+	
+	
 
+		
 	/*
 	 * public Grafo kruskal() { Grafo arbol = new Grafo(); ArrayList<Nodo> nodos =
 	 * (ArrayList<Nodo>) this.lista_nodos.clone(); arbol.setLista_nodos(nodos);
@@ -451,3 +464,4 @@ public class Grafo {
 	 * arcos.remove(pro); } return arbol; }
 	 */
 }
+
