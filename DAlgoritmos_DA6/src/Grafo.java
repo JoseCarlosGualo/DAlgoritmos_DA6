@@ -10,7 +10,11 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.TreeSet;
+
 import javax.imageio.ImageIO;
 import javax.sound.sampled.Line;
 import javax.xml.parsers.ParserConfigurationException;
@@ -323,7 +327,6 @@ public class Grafo {
 
 	// metodo que devuelve el nombre de la poblacion
 	public String separarNombre() {
-		System.out.println(this.nombre_poblacion.split(",")[0]);
 		return this.nombre_poblacion.split(",")[0];
 	}
 
@@ -382,43 +385,28 @@ public class Grafo {
 		}
 	}
 
+	public void quicksort_lista(ArrayList<Arco> array) {
+		quicksortRec(array, 0, array.size() - 1);
+	}
+
 	public void removerCiclo(Grafo arbol) {
 		int parent[] = new int[lista_nodos.size()];
-		
-		for (int i=0; i<lista_nodos.size();++i) {
+
+		for (int i = 0; i < lista_nodos.size(); ++i) {
 			parent[i] = -1;
 			lista_nodos.get(i).setNum_id(i);
 		}
-		
-		for(int i=0; i<lista_arcos.size();++i) {
-			int x =  find(parent, lista_arcos.get(i).getNodo_origen().getNum_id());
-			int y =  find(parent, lista_arcos.get(i).getNodo_destino().getNum_id());
-			
-			if(x != y) {
-				union(parent,x,y);
+
+		for (int i = 0; i < lista_arcos.size(); ++i) {
+			int x = find(parent, lista_arcos.get(i).getNodo_origen().getNum_id());
+			int y = find(parent, lista_arcos.get(i).getNodo_destino().getNum_id());
+
+			if (x != y) {
+				union(parent, x, y);
 				arbol.addArco(lista_arcos.get(i));
-				
+
 			}
 		}
-		/*
-		ArrayList<Arco> aux = terminal.getArcosIncidentes(this.lista_arcos);
-		if (aux.size() == 0) {
-			return false;
-		}
-		if (terminal.isRelacion(aux, verificar.getNodo_origen())) {
-			return true;
-		}
-
-		for (Arco a : aux) {
-			 System.out.println(a.getNodo_destino().getId_nodo() + " " + n);
-			if (a.getNodo_destino().getId_nodo().equalsIgnoreCase(n) == false) {
-
-				if (hayCiclo(g, verificar, a.getNodo_destino(), terminal.getId_nodo())) {
-					return true;
-				}
-			}
-		}
-		*/
 	}
 
 	public Grafo kruskal() {
@@ -426,42 +414,64 @@ public class Grafo {
 		ArrayList<Nodo> nodos = (ArrayList<Nodo>) this.lista_nodos.clone();
 		arbol.setLista_nodos(nodos);
 		removerCiclo(arbol);
+		arbol.setNombre_poblacion(this.separarNombre() + "-kruskal");
 		return arbol;
 	}
-	
+
 	public int find(int parent[], int i) {
-		if(parent[i] == -1)
+		if (parent[i] == -1)
 			return i;
 		return find(parent, parent[i]);
 	}
-	
+
 	public void union(int parent[], int x, int y) {
 		parent[x] = y;
 	}
-	
-	
 
-		
-	/*
-	 * public Grafo kruskal() { Grafo arbol = new Grafo(); ArrayList<Nodo> nodos =
-	 * (ArrayList<Nodo>) this.lista_nodos.clone(); arbol.setLista_nodos(nodos);
-	 * 
-	 * ArrayList<Arco> arcos = (ArrayList<Arco>) this.lista_arcos.clone();
-	 * 
-	 * ArrayList<Arco> v = (ArrayList<Arco>) this.lista_arcos.clone();
-	 * 
-	 * Arco pro = arcos.get(0); arbol.addArco(pro); arcos.remove(pro);
-	 * 
-	 * while (arcos.size() != 0) { pro = arcos.get(0); Nodo pro_origen =
-	 * pro.getNodo_origen(); Nodo pro_destino = pro.getNodo_destino();
-	 * ArrayList<Arco> va = pro_origen.getArcosIncidentes(arcos); ArrayList<Arco> vb
-	 * = pro_destino.getArcosIncidentes(arcos); if (!va.equals(vb)) { for (int i =
-	 * 0; i < va.size(); i++) v.remove(va.get(i)); for (int i = 0; i < vb.size();
-	 * i++) v.remove(vb.get(i)); for (int i = 0; i < va.size(); i++) { for (int j =
-	 * 0; j < vb.size(); j++) { if (va.get(i).equals(vb.get(j))) { v.add(va.get(i));
-	 * } } } arbol.addArco(pro); }
-	 * 
-	 * arcos.remove(pro); } return arbol; }
-	 */
+	public Grafo prim() {
+		Grafo grafo = new Grafo();
+		ArrayList<Arco> arcos = new ArrayList<Arco>();
+		ArrayList<Nodo> nodos = (ArrayList<Nodo>) this.lista_nodos.clone();
+		ArrayList<Arco> arcos_resultado = new ArrayList<Arco>();
+		ArrayList<Arco> aux = new ArrayList<Arco>();
+		grafo.setLista_nodos(this.lista_nodos);
+		grafo.setNombre_poblacion(this.separarNombre() + "-prim");
+
+		for (int i = 0; i < this.lista_arcos.size(); i++) {
+			arcos.add(new Arco(this.lista_arcos.get(i).getId(), this.lista_arcos.get(i).getNodo_origen(),
+					this.lista_arcos.get(i).getNodo_destino(), this.lista_arcos.get(i).getLength()));
+		}
+
+		/*
+		 * for (int i = 0; i < this.lista_nodos.size(); i++) { nodos.add(new
+		 * Nodo(this.lista_nodos.get(i).getX(), this.lista_nodos.get(i).getY(),
+		 * this.lista_nodos.get(i).getId_nodo())); }
+		 */
+
+		int numero = (int) (Math.random() * arcos.size() - 1);
+		Nodo nodo0 = arcos.get(numero).getNodo_origen();
+		while (!nodos.isEmpty()) {
+			aux.addAll(nodo0.getArcosIncidentes(arcos));
+			this.quicksort_lista(aux);
+
+			for (int i = 0; i < aux.size(); i++) {
+				Arco arco0 = aux.remove(0);
+				// System.out.println("for");
+				System.out.println(nodos.contains(arco0.getNodo_destino()));
+				if (nodos.contains(arco0.getNodo_destino()) == true) {
+					System.out.println("if");
+					arcos_resultado.add(arco0);
+					nodos.remove(nodo0);
+					nodo0 = arco0.getNodo_destino();
+					i = aux.size();
+				}
+			}
+
+		}
+
+		grafo.setLista_arcos(arcos_resultado);
+
+		return grafo;
+	}
+
 }
-

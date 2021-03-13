@@ -10,12 +10,12 @@ public class Nodo {
 		this.x = x;
 		this.y = y;
 		this.id_nodo = id_nodo;
-		
+
 	}
 
 	public Nodo() {
 	}
-	
+
 	public int getNum_id() {
 		return num_id;
 	}
@@ -23,7 +23,6 @@ public class Nodo {
 	public void setNum_id(int num_id) {
 		this.num_id = num_id;
 	}
-
 
 	public double getX() {
 		return x;
@@ -52,7 +51,7 @@ public class Nodo {
 	public ArrayList<Arco> getArcosIncidentes(ArrayList<Arco> lista_arcos) {
 		ArrayList<Arco> arcos_incidentes = new ArrayList<Arco>();
 		for (Arco a : lista_arcos) {
-			if (a.getNodo_destino().getId_nodo().equalsIgnoreCase(this.id_nodo)) {
+			if (a.getNodo_origen().getId_nodo().equalsIgnoreCase(this.id_nodo)) {
 				arcos_incidentes.add(a);
 			}
 		}
