@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.TreeSet;
 
@@ -385,93 +386,101 @@ public class Grafo {
 		}
 	}
 
-	public void quicksort_lista(ArrayList<Arco> array) {
-		quicksortRec(array, 0, array.size() - 1);
-	}
-
-	public void removerCiclo(Grafo arbol) {
-		int parent[] = new int[lista_nodos.size()];
-
-		for (int i = 0; i < lista_nodos.size(); ++i) {
-			parent[i] = -1;
-			lista_nodos.get(i).setNum_id(i);
-		}
-
-		for (int i = 0; i < lista_arcos.size(); ++i) {
-			int x = find(parent, lista_arcos.get(i).getNodo_origen().getNum_id());
-			int y = find(parent, lista_arcos.get(i).getNodo_destino().getNum_id());
-
-			if (x != y) {
-				union(parent, x, y);
-				arbol.addArco(lista_arcos.get(i));
-
+	public int find(ArrayList<ArrayList<Nodo>> componentesConexas, Nodo nodo) {
+		int pos = -1;
+		for (int i = 0; i < componentesConexas.size() && pos == -1; i++) {
+			if (componentesConexas.get(i).contains(nodo)) {
+				pos = i;
 			}
 		}
+		return pos;
+	}
+
+	public void union(ArrayList<ArrayList<Nodo>> componentesConexas, int x, int y) {
+		for (int i = 0; i < componentesConexas.get(y).size(); i++) {
+			componentesConexas.get(x).add(componentesConexas.get(y).get(i));
+		}
+		componentesConexas.remove(y);
 	}
 
 	public Grafo kruskal() {
-		Grafo arbol = new Grafo();
-		ArrayList<Nodo> nodos = (ArrayList<Nodo>) this.lista_nodos.clone();
-		arbol.setLista_nodos(nodos);
-		removerCiclo(arbol);
-		arbol.setNombre_poblacion(this.separarNombre() + "-kruskal");
-		return arbol;
-	}
-
-	public int find(int parent[], int i) {
-		if (parent[i] == -1)
-			return i;
-		return find(parent, parent[i]);
-	}
-
-	public void union(int parent[], int x, int y) {
-		parent[x] = y;
-	}
-
-	public Grafo prim() {
 		Grafo grafo = new Grafo();
 		ArrayList<Arco> arcos = new ArrayList<Arco>();
-		ArrayList<Nodo> nodos = (ArrayList<Nodo>) this.lista_nodos.clone();
+		ArrayList<ArrayList<Nodo>> componentesConexas = new ArrayList<ArrayList<Nodo>>();
 		ArrayList<Arco> arcos_resultado = new ArrayList<Arco>();
-		ArrayList<Arco> aux = new ArrayList<Arco>();
+		grafo.setNombre_poblacion(this.separarNombre() + "-kruskal");
 		grafo.setLista_nodos(this.lista_nodos);
-		grafo.setNombre_poblacion(this.separarNombre() + "-prim");
+
+		for (int i = 0; i < this.lista_nodos.size(); i++) {
+			ArrayList<Nodo> componente = new ArrayList<Nodo>();
+			componente.add(this.lista_nodos.get(i));
+			componentesConexas.add(componente);
+		}
 
 		for (int i = 0; i < this.lista_arcos.size(); i++) {
 			arcos.add(new Arco(this.lista_arcos.get(i).getId(), this.lista_arcos.get(i).getNodo_origen(),
 					this.lista_arcos.get(i).getNodo_destino(), this.lista_arcos.get(i).getLength()));
 		}
 
-		/*
-		 * for (int i = 0; i < this.lista_nodos.size(); i++) { nodos.add(new
-		 * Nodo(this.lista_nodos.get(i).getX(), this.lista_nodos.get(i).getY(),
-		 * this.lista_nodos.get(i).getId_nodo())); }
-		 */
-
-		int numero = (int) (Math.random() * arcos.size() - 1);
-		Nodo nodo0 = arcos.get(numero).getNodo_origen();
-		while (!nodos.isEmpty()) {
-			aux.addAll(nodo0.getArcosIncidentes(arcos));
-			this.quicksort_lista(aux);
-
-			for (int i = 0; i < aux.size(); i++) {
-				Arco arco0 = aux.remove(0);
-				// System.out.println("for");
-				System.out.println(nodos.contains(arco0.getNodo_destino()));
-				if (nodos.contains(arco0.getNodo_destino()) == true) {
-					System.out.println("if");
-					arcos_resultado.add(arco0);
-					nodos.remove(nodo0);
-					nodo0 = arco0.getNodo_destino();
-					i = aux.size();
-				}
+		do {
+			Arco arco0 = arcos.get(0);
+			arcos.remove(0);
+			int x = find(componentesConexas, arco0.getNodo_origen());
+			int y = find(componentesConexas, arco0.getNodo_destino());
+			if (x != y) {
+				union(componentesConexas, x, y);
+				arcos_resultado.add(arco0);
 			}
+		} while (componentesConexas.size() > 1);
 
+		grafo.setLista_arcos(arcos_resultado);
+		return grafo;
+	}
+
+	public Grafo prim() {
+		Grafo grafo = new Grafo();
+		ArrayList<Arco> arcos = new ArrayList<Arco>();
+		ArrayList<Arco> arcos_resultado = new ArrayList<Arco>();
+		HashSet<Nodo> b = new HashSet<Nodo>();
+		ArrayList<Nodo> nodos = new ArrayList<Nodo>();
+		grafo.setNombre_poblacion(this.separarNombre() + "-prim");
+		grafo.setLista_nodos(this.lista_nodos);
+
+		for (int i = 0; i < this.lista_arcos.size(); i++) {
+			arcos.add(new Arco(this.lista_arcos.get(i).getId(), this.lista_arcos.get(i).getNodo_origen(),
+					this.lista_arcos.get(i).getNodo_destino(), this.lista_arcos.get(i).getLength()));
+		}
+
+		for (int i = 0; i < this.lista_nodos.size(); i++) {
+			nodos.add(new Nodo(this.lista_nodos.get(i).getX(), this.lista_nodos.get(i).getY(),
+					this.lista_nodos.get(i).getId_nodo()));
+		}
+
+		b.add(this.lista_arcos.get(0).getNodo_origen());
+
+		while (b.size() < nodos.size()) {
+
+			Arco arco0 = encontrar(b, arcos);
+			b.add(arco0.getNodo_destino());
+			b.add(arco0.getNodo_origen());
+			arcos_resultado.add(arco0);
 		}
 
 		grafo.setLista_arcos(arcos_resultado);
-
 		return grafo;
+	}
+
+	public Arco encontrar(HashSet<Nodo> b, ArrayList<Arco> arcos_ordenados) {
+		Arco a = null;
+		for (int i = 0; i < arcos_ordenados.size() && a == null; i++) {
+			Arco aux = arcos_ordenados.get(i);
+
+			if ((b.contains(aux.getNodo_origen()) && !b.contains(aux.getNodo_destino()))
+					|| (!b.contains(aux.getNodo_origen()) && b.contains(aux.getNodo_destino()))) {
+				a = aux;
+			}
+		}
+		return a;
 	}
 
 }

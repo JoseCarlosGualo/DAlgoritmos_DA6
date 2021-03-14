@@ -4,7 +4,6 @@ public class Nodo {
 	private double x;
 	private double y;
 	private String id_nodo;
-	private int num_id;
 
 	public Nodo(double x, double y, String id_nodo) {
 		this.x = x;
@@ -14,14 +13,6 @@ public class Nodo {
 	}
 
 	public Nodo() {
-	}
-
-	public int getNum_id() {
-		return num_id;
-	}
-
-	public void setNum_id(int num_id) {
-		this.num_id = num_id;
 	}
 
 	public double getX() {
