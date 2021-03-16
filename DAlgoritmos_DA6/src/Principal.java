@@ -13,10 +13,33 @@ public class Principal {
 
 		ArrayList<String> lista_archivos = getListaXML();
 		ArrayList<Grafo> lista_grafos = getGrafosFromXML(lista_archivos);
-		for (Grafo g : lista_grafos) {
-			g.dibujarGrafo();
-			g.crear_graphml();
+		ArrayList<Grafo> lista_kruskal = new ArrayList<Grafo>();
+		ArrayList<Grafo> lista_prim = new ArrayList<Grafo>();
+
+		for (int i = 0; i < lista_grafos.size(); i++) {
+			Grafo g = lista_grafos.get(i);
+			g.quicksort();
+			Grafo kruskal = g.kruskal();
+			lista_kruskal.add(kruskal);
 		}
+
+		lista_grafos = getGrafosFromXML(lista_archivos);
+
+		for (int i = 0; i < lista_grafos.size(); i++) {
+			Grafo g = lista_grafos.get(i);
+			g.quicksort();
+			Grafo prim = g.prim();
+			lista_prim.add(prim);
+		}
+
+		for (int i = 0; i < lista_kruskal.size(); i++) {
+			lista_kruskal.get(i).dibujarGrafo();
+		}
+
+		for (int i = 0; i < lista_prim.size(); i++) {
+			lista_prim.get(i).dibujarGrafo();
+		}
+
 	}
 
 	public static ArrayList<String> getListaXML() {

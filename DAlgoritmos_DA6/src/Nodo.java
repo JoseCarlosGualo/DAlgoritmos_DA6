@@ -9,6 +9,7 @@ public class Nodo {
 		this.x = x;
 		this.y = y;
 		this.id_nodo = id_nodo;
+
 	}
 
 	public Nodo() {
@@ -36,6 +37,27 @@ public class Nodo {
 
 	public void setId_nodo(String id_nodo) {
 		this.id_nodo = id_nodo;
+	}
+
+	public ArrayList<Arco> getArcosIncidentes(ArrayList<Arco> lista_arcos) {
+		ArrayList<Arco> arcos_incidentes = new ArrayList<Arco>();
+		for (Arco a : lista_arcos) {
+			if (a.getNodo_origen().getId_nodo().equalsIgnoreCase(this.id_nodo)) {
+				arcos_incidentes.add(a);
+			}
+		}
+
+		return arcos_incidentes;
+	}
+
+	public boolean isRelacion(ArrayList<Arco> lista_arcos, Nodo origen) {
+		for (Arco a : lista_arcos) {
+			if (a.getNodo_destino().getId_nodo().equalsIgnoreCase(origen.getId_nodo())) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/*

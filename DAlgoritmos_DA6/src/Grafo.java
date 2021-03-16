@@ -10,7 +10,12 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.TreeSet;
+
 import javax.imageio.ImageIO;
 import javax.sound.sampled.Line;
 import javax.xml.parsers.ParserConfigurationException;
@@ -100,6 +105,13 @@ public class Grafo {
 			this.lista_nodos = new ArrayList<Nodo>();
 		}
 		this.lista_nodos.add(nodo);
+	}
+
+	public void addArco(Arco arco) {
+		if (this.lista_arcos == null) {
+			this.lista_arcos = new ArrayList<Arco>();
+		}
+		this.lista_arcos.add(arco);
 	}
 
 	public String toString() {
@@ -314,9 +326,161 @@ public class Grafo {
 		}
 	}
 
+	// metodo que devuelve el nombre de la poblacion
 	public String separarNombre() {
-		System.out.println(this.nombre_poblacion.split(",")[0]);
 		return this.nombre_poblacion.split(",")[0];
+	}
+
+	public int partition(ArrayList<Arco> a, int left, int right) {
+		return HoarePartition(a, left, right); // Using Hoare partition
+	}
+
+	/**
+	 * Method implementing Hoare's partition
+	 * 
+	 * @param a     The array to partition
+	 * @param left  Starting index of subarray
+	 * @param right Finish index of subarray
+	 * @return The pivot position
+	 */
+	public int HoarePartition(ArrayList<Arco> a, int left, int right) {
+		int l = left, r = right + 1;
+		double p = a.get(left).getLength(), aux;
+		while (l < r) {
+			while (l < right && a.get(++l).getLength() < p)
+				;
+			while (r > left && p < a.get(--r).getLength())
+				;
+			if (l < r) {
+				aux = a.get(l).getLength();
+				a.get(l).setLength(a.get(r).getLength());
+				a.get(r).setLength(aux);
+			}
+		}
+		a.get(left).setLength(a.get(r).getLength());
+		a.get(r).setLength(p);
+		return r;
+	}
+
+	/**
+	 * Wrapper method for calling the actual, divide and conquer, quicksort method.
+	 * 
+	 * @param array The array to sort. Ii is sorted at the end.
+	 */
+	public void quicksort() {
+		quicksortRec(this.lista_arcos, 0, this.lista_arcos.size() - 1);
+	}
+
+	/**
+	 * Quicksort.
+	 * 
+	 * @param array The array to sort. Ii is sorted at the end.
+	 * @param left  Starting index of subarray.
+	 * @param right Finish index of subarray,
+	 */
+	public void quicksortRec(ArrayList<Arco> array, int left, int right) {
+		if (left < right) {
+			int p = partition(array, left, right); // Divide
+			quicksortRec(array, left, p - 1); // Conquer
+			quicksortRec(array, p + 1, right);
+		}
+	}
+
+	public int find(ArrayList<ArrayList<Nodo>> componentesConexas, Nodo nodo) {
+		int pos = -1;
+		for (int i = 0; i < componentesConexas.size() && pos == -1; i++) {
+			if (componentesConexas.get(i).contains(nodo)) {
+				pos = i;
+			}
+		}
+		return pos;
+	}
+
+	public void union(ArrayList<ArrayList<Nodo>> componentesConexas, int x, int y) {
+		for (int i = 0; i < componentesConexas.get(y).size(); i++) {
+			componentesConexas.get(x).add(componentesConexas.get(y).get(i));
+		}
+		componentesConexas.remove(y);
+	}
+
+	public Grafo kruskal() {
+		Grafo grafo = new Grafo();
+		ArrayList<Arco> arcos = new ArrayList<Arco>();
+		ArrayList<ArrayList<Nodo>> componentesConexas = new ArrayList<ArrayList<Nodo>>();
+		ArrayList<Arco> arcos_resultado = new ArrayList<Arco>();
+		grafo.setNombre_poblacion(this.separarNombre() + "-kruskal");
+		grafo.setLista_nodos(this.lista_nodos);
+
+		for (int i = 0; i < this.lista_nodos.size(); i++) {
+			ArrayList<Nodo> componente = new ArrayList<Nodo>();
+			componente.add(this.lista_nodos.get(i));
+			componentesConexas.add(componente);
+		}
+
+		for (int i = 0; i < this.lista_arcos.size(); i++) {
+			arcos.add(new Arco(this.lista_arcos.get(i).getId(), this.lista_arcos.get(i).getNodo_origen(),
+					this.lista_arcos.get(i).getNodo_destino(), this.lista_arcos.get(i).getLength()));
+		}
+
+		do {
+			Arco arco0 = arcos.get(0);
+			arcos.remove(0);
+			int x = find(componentesConexas, arco0.getNodo_origen());
+			int y = find(componentesConexas, arco0.getNodo_destino());
+			if (x != y) {
+				union(componentesConexas, x, y);
+				arcos_resultado.add(arco0);
+			}
+		} while (componentesConexas.size() > 1);
+
+		grafo.setLista_arcos(arcos_resultado);
+		return grafo;
+	}
+
+	public Grafo prim() {
+		Grafo grafo = new Grafo();
+		ArrayList<Arco> arcos = new ArrayList<Arco>();
+		ArrayList<Arco> arcos_resultado = new ArrayList<Arco>();
+		HashSet<Nodo> b = new HashSet<Nodo>();
+		ArrayList<Nodo> nodos = new ArrayList<Nodo>();
+		grafo.setNombre_poblacion(this.separarNombre() + "-prim");
+		grafo.setLista_nodos(this.lista_nodos);
+
+		for (int i = 0; i < this.lista_arcos.size(); i++) {
+			arcos.add(new Arco(this.lista_arcos.get(i).getId(), this.lista_arcos.get(i).getNodo_origen(),
+					this.lista_arcos.get(i).getNodo_destino(), this.lista_arcos.get(i).getLength()));
+		}
+
+		for (int i = 0; i < this.lista_nodos.size(); i++) {
+			nodos.add(new Nodo(this.lista_nodos.get(i).getX(), this.lista_nodos.get(i).getY(),
+					this.lista_nodos.get(i).getId_nodo()));
+		}
+
+		b.add(this.lista_arcos.get(0).getNodo_origen());
+
+		while (b.size() < nodos.size()) {
+
+			Arco arco0 = encontrar(b, arcos);
+			b.add(arco0.getNodo_destino());
+			b.add(arco0.getNodo_origen());
+			arcos_resultado.add(arco0);
+		}
+
+		grafo.setLista_arcos(arcos_resultado);
+		return grafo;
+	}
+
+	public Arco encontrar(HashSet<Nodo> b, ArrayList<Arco> arcos_ordenados) {
+		Arco a = null;
+		for (int i = 0; i < arcos_ordenados.size() && a == null; i++) {
+			Arco aux = arcos_ordenados.get(i);
+
+			if ((b.contains(aux.getNodo_origen()) && !b.contains(aux.getNodo_destino()))
+					|| (!b.contains(aux.getNodo_origen()) && b.contains(aux.getNodo_destino()))) {
+				a = aux;
+			}
+		}
+		return a;
 	}
 
 }
