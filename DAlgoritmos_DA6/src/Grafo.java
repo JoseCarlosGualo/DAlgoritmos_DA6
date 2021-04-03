@@ -627,5 +627,21 @@ public class Grafo {
 
 		}
 	}
+	
+	public Nodo encontrarRaiz() {
+		Nodo raiz = new Nodo();
+		int media = 0;
+		int distancia = 0;
+		int aux = Integer.MAX_VALUE;
+		for(Nodo n : lista_nodos) {
+			media = cuenta_nodos_hoja(n);
+			distancia = cuenta_distancia_nodos_hoja(n);
+			if((distancia/media) < aux) {
+				raiz = n;
+				aux = (distancia/media);
+			}
+		}
+		return raiz;
+	}
 
 }

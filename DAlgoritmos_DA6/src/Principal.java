@@ -21,6 +21,8 @@ public class Principal {
 			g.quicksort();
 			Grafo kruskal = g.kruskal();
 			lista_kruskal.add(kruskal);
+			lista_kruskal.get(i).dibujarGrafo();
+			System.out.println(lista_kruskal.get(i).nombre_poblacion+" Raiz: "+lista_kruskal.get(i).encontrarRaiz().toString());
 		}
 
 		/*
@@ -37,8 +39,9 @@ public class Principal {
 		 * lista_prim.get(i).dibujarGrafo(); }
 		 */
 
-		lista_kruskal.get(3).prueba_distancia();
-		lista_kruskal.get(3).dibujarGrafo();
+		//lista_kruskal.get(3).prueba_distancia();
+		
+		
 
 	}
 
