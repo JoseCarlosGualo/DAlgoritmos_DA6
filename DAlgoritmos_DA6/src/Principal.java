@@ -23,22 +23,22 @@ public class Principal {
 			lista_kruskal.add(kruskal);
 		}
 
-		lista_grafos = getGrafosFromXML(lista_archivos);
+		/*
+		 * lista_grafos = getGrafosFromXML(lista_archivos);
+		 * 
+		 * for (int i = 0; i < lista_grafos.size(); i++) { Grafo g =
+		 * lista_grafos.get(i); g.quicksort(); Grafo prim = g.prim();
+		 * lista_prim.add(prim); }
+		 * 
+		 * for (int i = 0; i < lista_kruskal.size(); i++) {
+		 * lista_kruskal.get(i).dibujarGrafo(); }
+		 * 
+		 * for (int i = 0; i < lista_prim.size(); i++) {
+		 * lista_prim.get(i).dibujarGrafo(); }
+		 */
 
-		for (int i = 0; i < lista_grafos.size(); i++) {
-			Grafo g = lista_grafos.get(i);
-			g.quicksort();
-			Grafo prim = g.prim();
-			lista_prim.add(prim);
-		}
-
-		for (int i = 0; i < lista_kruskal.size(); i++) {
-			lista_kruskal.get(i).dibujarGrafo();
-		}
-
-		for (int i = 0; i < lista_prim.size(); i++) {
-			lista_prim.get(i).dibujarGrafo();
-		}
+		lista_kruskal.get(3).prueba_distancia();
+		lista_kruskal.get(3).dibujarGrafo();
 
 	}
 

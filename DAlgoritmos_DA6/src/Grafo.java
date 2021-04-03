@@ -182,8 +182,15 @@ public class Grafo {
 		}
 
 		for (Nodo n : this.lista_nodos) {
+
+			if (n.getId_nodo().equalsIgnoreCase("1050180142")) {
+				g2d.setColor(Color.BLUE);
+			} else {
+				g2d.setColor(Color.RED);
+			}
+
 			g2d.setStroke(new BasicStroke(2));
-			g2d.setColor(Color.RED);
+
 			double xnodo = (((Xmaxima - Math.abs(n.getX())) / diffX) * width) - 2;
 			double ynodo = (((Ymaxima - Math.abs(n.getY())) / diffY) * height) - 2;
 			g2d.draw(new Ellipse2D.Double(xnodo, ynodo, 4, 4));
@@ -456,7 +463,8 @@ public class Grafo {
 					this.lista_nodos.get(i).getId_nodo()));
 		}
 
-		b.add(this.lista_arcos.get(0).getNodo_origen());
+		int numero = (int) (Math.random() * this.lista_arcos.size());
+		b.add(this.lista_arcos.get(numero).getNodo_origen());
 
 		while (b.size() < nodos.size()) {
 
@@ -481,6 +489,143 @@ public class Grafo {
 			}
 		}
 		return a;
+	}
+
+	public void cuenta_nodos_subArbolAux(Nodo nodo) {
+		ArrayList<Arco> arcos_anexos = new ArrayList<Arco>();
+		arcos_anexos = nodo.getArcosIncidentes(this.lista_arcos);
+
+		for (Arco a : arcos_anexos) {
+			if (a.getNodo_origen().equals(nodo)) {
+				System.out.println(cuenta_nodos_subArbol(a.getNodo_destino(), a));
+			} else if (a.getNodo_destino().equals(nodo)) {
+				System.out.println(cuenta_nodos_subArbol(a.getNodo_origen(), a));
+			}
+
+		}
+	}
+
+	public int cuenta_nodos_subArbol(Nodo nodo, Arco arco) {
+		int total = 1;
+		ArrayList<Arco> arcos_anexos = new ArrayList<Arco>();
+		arcos_anexos = nodo.getArcosIncidentes(this.lista_arcos);
+		if (arcos_anexos.size() == 1) {
+			return total;
+		}
+
+		for (Arco a : arcos_anexos) {
+			if (a != arco) {
+				if (a.getNodo_origen().equals(nodo)) {
+					total += cuenta_nodos_subArbol(a.getNodo_destino(), a);
+				} else if (a.getNodo_destino().equals(nodo)) {
+					total += cuenta_nodos_subArbol(a.getNodo_origen(), a);
+				}
+
+			}
+
+		}
+
+		return total;
+	}
+
+	public void prueba() {
+		for (Nodo n : this.lista_nodos) {
+			if (n.getId_nodo().equalsIgnoreCase("1050180142")) {
+				cuenta_nodos_subArbolAux(n);
+			}
+		}
+	}
+
+	public int cuenta_nodos_hoja(Nodo nodo) {
+		int suma = 0;
+		ArrayList<Arco> arcos_anexos = new ArrayList<Arco>();
+		arcos_anexos = nodo.getArcosIncidentes(this.lista_arcos);
+
+		for (Arco a : arcos_anexos) {
+			if (a.getNodo_origen().equals(nodo)) {
+				suma += cuenta_nodos_hoja(a.getNodo_destino(), a);
+			} else if (a.getNodo_destino().equals(nodo)) {
+				suma += cuenta_nodos_hoja(a.getNodo_origen(), a);
+			}
+
+		}
+		return suma;
+	}
+
+	public int cuenta_nodos_hoja(Nodo nodo, Arco arco) {
+		int total = 0;
+		ArrayList<Arco> arcos_anexos = new ArrayList<Arco>();
+		arcos_anexos = nodo.getArcosIncidentes(this.lista_arcos);
+		if (arcos_anexos.size() == 1) {
+			return 1;
+		} else {
+			for (Arco a : arcos_anexos) {
+				if (a != arco) {
+					if (a.getNodo_origen().equals(nodo)) {
+						total += cuenta_nodos_hoja(a.getNodo_destino(), a);
+					} else if (a.getNodo_destino().equals(nodo)) {
+						total += cuenta_nodos_hoja(a.getNodo_origen(), a);
+					}
+				}
+			}
+		}
+
+		return total;
+	}
+
+	public void prueba_altura() {
+		for (Nodo n : this.lista_nodos) {
+
+			System.out.println(cuenta_nodos_hoja(n));
+
+		}
+	}
+
+	public int cuenta_distancia_nodos_hoja(Nodo nodo) {
+
+		int suma = 0;
+		ArrayList<Arco> arcos_anexos = new ArrayList<Arco>();
+		arcos_anexos = nodo.getArcosIncidentes(this.lista_arcos);
+
+		for (Arco a : arcos_anexos) {
+			if (a.getNodo_origen().equals(nodo)) {
+				suma += cuenta_distancia_nodos_hoja(a.getNodo_destino(), a, 0);
+			} else if (a.getNodo_destino().equals(nodo)) {
+				suma += cuenta_distancia_nodos_hoja(a.getNodo_origen(), a, 0);
+			}
+
+		}
+		return suma;
+
+	}
+
+	public int cuenta_distancia_nodos_hoja(Nodo nodo, Arco arco, int acumulado) {
+		int total = 0;
+		ArrayList<Arco> arcos_anexos = new ArrayList<Arco>();
+		arcos_anexos = nodo.getArcosIncidentes(this.lista_arcos);
+		if (arcos_anexos.size() == 1) {
+			return acumulado;
+		} else {
+			for (Arco a : arcos_anexos) {
+				if (a != arco) {
+					if (a.getNodo_origen().equals(nodo)) {
+						total += cuenta_distancia_nodos_hoja(a.getNodo_destino(), a, acumulado + 1);
+					} else if (a.getNodo_destino().equals(nodo)) {
+						total += cuenta_distancia_nodos_hoja(a.getNodo_origen(), a, acumulado + 1);
+					}
+				}
+			}
+		}
+
+		return total;
+	}
+
+	public void prueba_distancia() {
+		for (Nodo n : this.lista_nodos) {
+
+			System.out.println(cuenta_distancia_nodos_hoja(n));
+
+		}
 	}
 
 }
