@@ -22,9 +22,16 @@ public class Principal {
 			Grafo kruskal = g.kruskal();
 			lista_kruskal.add(kruskal);
 			lista_kruskal.get(i).dibujarGrafo();
-			System.out.println(lista_kruskal.get(i).nombre_poblacion+" Raiz: "+lista_kruskal.get(i).encontrarRaiz().toString());
+			Nodo nodo = lista_kruskal.get(i).encontrarRaiz();
+			System.out.println(lista_kruskal.get(i).nombre_poblacion + " Raiz: " + nodo.toString());
 		}
 
+		/*
+		 * for (int i = 0; i < lista_grafos.size(); i++) { Grafo g =
+		 * lista_grafos.get(i); g.quicksort(); Grafo kruskal = g.kruskal();
+		 * lista_kruskal.add(kruskal); lista_kruskal.get(i).maxIncidentes(); /*}
+		 * 
+		 */
 		/*
 		 * lista_grafos = getGrafosFromXML(lista_archivos);
 		 * 
@@ -39,9 +46,7 @@ public class Principal {
 		 * lista_prim.get(i).dibujarGrafo(); }
 		 */
 
-		//lista_kruskal.get(3).prueba_distancia();
-		
-		
+		// lista_kruskal.get(3).prueba_distancia();
 
 	}
 

@@ -183,11 +183,7 @@ public class Grafo {
 
 		for (Nodo n : this.lista_nodos) {
 
-			if (n.getId_nodo().equalsIgnoreCase("1050180142")) {
-				g2d.setColor(Color.BLUE);
-			} else {
-				g2d.setColor(Color.RED);
-			}
+			g2d.setColor(Color.RED);
 
 			g2d.setStroke(new BasicStroke(2));
 
@@ -587,11 +583,15 @@ public class Grafo {
 		ArrayList<Arco> arcos_anexos = new ArrayList<Arco>();
 		arcos_anexos = nodo.getArcosIncidentes(this.lista_arcos);
 
+		if (arcos_anexos.size() == 1) {
+			return Integer.MAX_VALUE;
+		}
+
 		for (Arco a : arcos_anexos) {
 			if (a.getNodo_origen().equals(nodo)) {
-				suma += cuenta_distancia_nodos_hoja(a.getNodo_destino(), a, 0);
+				suma += cuenta_distancia_nodos_hoja(a.getNodo_destino(), a, 1);
 			} else if (a.getNodo_destino().equals(nodo)) {
-				suma += cuenta_distancia_nodos_hoja(a.getNodo_origen(), a, 0);
+				suma += cuenta_distancia_nodos_hoja(a.getNodo_origen(), a, 1);
 			}
 
 		}
@@ -627,21 +627,35 @@ public class Grafo {
 
 		}
 	}
-	
+
 	public Nodo encontrarRaiz() {
 		Nodo raiz = new Nodo();
-		int media = 0;
+		double media = 0;
 		int distancia = 0;
-		int aux = Integer.MAX_VALUE;
-		for(Nodo n : lista_nodos) {
+		double aux = Integer.MAX_VALUE;
+		for (Nodo n : lista_nodos) {
 			media = cuenta_nodos_hoja(n);
 			distancia = cuenta_distancia_nodos_hoja(n);
-			if((distancia/media) < aux) {
+			if ((distancia / media) < aux) {
 				raiz = n;
-				aux = (distancia/media);
+				aux = (distancia / media);
+				// System.out.println(aux);
 			}
 		}
 		return raiz;
+	}
+
+	public void maxIncidentes() {
+		int aux = Integer.MIN_VALUE;
+		int sol = 0;
+		for (Nodo n : this.lista_nodos) {
+			ArrayList<Arco> arcos = n.getArcosIncidentes(this.lista_arcos);
+			if (arcos.size() > aux) {
+				sol = arcos.size();
+				aux = sol;
+			}
+		}
+		System.out.println(sol);
 	}
 
 }
