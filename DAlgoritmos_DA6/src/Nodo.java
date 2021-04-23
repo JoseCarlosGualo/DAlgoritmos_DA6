@@ -51,6 +51,15 @@ public class Nodo {
 		return arcos_incidentes;
 	}
 
+	public boolean pertenece(ArrayList<Nodo> lista_nodos) {
+		for (Nodo n : lista_nodos) {
+			if (n.getId_nodo().equalsIgnoreCase(this.getId_nodo())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public String toString() {
 		return "Nodo{" + "Id_Nodo=" + this.id_nodo + ", x=" + this.x + ", y=" + this.y + '}';
 	}

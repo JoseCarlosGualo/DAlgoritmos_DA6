@@ -47,7 +47,7 @@ public class Arco {
 	}
 
 	public String toString() {
-		return "Arco{" + "Length=" + this.length + ", origen=" + this.nodo_origen.toString() + ", destino="
+		return "Arco{ Id: "+this.id+ "Length=" + this.length + ", origen=" + this.nodo_origen.toString() + ", destino="
 				+ this.nodo_destino.toString() + '}';
 	}
 
