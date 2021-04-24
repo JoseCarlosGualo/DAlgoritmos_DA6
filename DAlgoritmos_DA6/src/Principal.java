@@ -8,7 +8,21 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.SAXException;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Principal.
+ */
 public class Principal {
+
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 * @throws ParserConfigurationException the parser configuration exception
+	 * @throws SAXException                 the SAX exception
+	 * @throws IOException                  Signals that an I/O exception has
+	 *                                      occurred.
+	 */
 	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException {
 
 		ArrayList<String> lista_archivos = getListaXML();
@@ -37,6 +51,11 @@ public class Principal {
 
 	}
 
+	/**
+	 * Gets the lista XML.
+	 *
+	 * @return the lista XML
+	 */
 	public static ArrayList<String> getListaXML() {
 		ArrayList<String> nombre_xmls = new ArrayList<String>();
 		File miDir = new File("Poblaciones");
@@ -54,6 +73,12 @@ public class Principal {
 		return nombre_xmls;
 	}
 
+	/**
+	 * Gets the grafos from XML.
+	 *
+	 * @param lista_archivos the lista archivos
+	 * @return the grafos from XML
+	 */
 	public static ArrayList<Grafo> getGrafosFromXML(ArrayList<String> lista_archivos) {
 		ArrayList<Grafo> lista_grafos = new ArrayList<Grafo>();
 		for (String nombre_archivo : lista_archivos) {
@@ -62,6 +87,12 @@ public class Principal {
 		return lista_grafos;
 	}
 
+	/**
+	 * Generar grafo raices.
+	 *
+	 * @param lista_raices the lista raices
+	 * @return the grafo
+	 */
 	public static Grafo generarGrafoRaices(ArrayList<Nodo> lista_raices) {
 		Grafo g = new Grafo();
 		g.setNombre_poblacion("Raices poblaciones ");
@@ -76,6 +107,12 @@ public class Principal {
 		return g;
 	}
 
+	/**
+	 * Gets the arcos unitarios.
+	 *
+	 * @param lista_nodos_raices the lista nodos raices
+	 * @return the arcos unitarios
+	 */
 	public static ArrayList<Arco> get_arcos_unitarios(ArrayList<Nodo> lista_nodos_raices) {
 		int i = 0;
 		ArrayList<Arco> lista_arcos_unitarios = new ArrayList<Arco>();
@@ -91,6 +128,14 @@ public class Principal {
 		return lista_arcos_unitarios;
 	}
 
+	/**
+	 * Check repetidos.
+	 *
+	 * @param arcos the arcos
+	 * @param n1    the n 1
+	 * @param n2    the n 2
+	 * @return true, if successful
+	 */
 	public static boolean checkRepetidos(ArrayList<Arco> arcos, Nodo n1, Nodo n2) {
 		for (Arco a : arcos) {
 			if (a.getNodo_destino().equals(n1) && a.getNodo_origen().equals(n2)) {

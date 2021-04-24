@@ -44,11 +44,26 @@ import org.w3c.dom.Text;
 
 import org.xml.sax.SAXException;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Grafo.
+ */
 public class Grafo {
+
+	/** The nombre poblacion. */
 	String nombre_poblacion;
+
+	/** The lista arcos. */
 	private ArrayList<Arco> lista_arcos;
+
+	/** The lista nodos. */
 	private ArrayList<Nodo> lista_nodos;
 
+	/**
+	 * Instantiates a new grafo.
+	 *
+	 * @param xml the xml
+	 */
 	public Grafo(String xml) {
 		SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
 		SAXParser saxParser;
@@ -73,33 +88,71 @@ public class Grafo {
 
 	}
 
+	/**
+	 * Instantiates a new grafo.
+	 */
 	public Grafo() {
 	}
 
+	/**
+	 * Gets the nombre poblacion.
+	 *
+	 * @return the nombre poblacion
+	 */
 	public String getNombre_poblacion() {
 		return nombre_poblacion;
 	}
 
+	/**
+	 * Sets the nombre poblacion.
+	 *
+	 * @param nombre_poblacion the new nombre poblacion
+	 */
 	public void setNombre_poblacion(String nombre_poblacion) {
 		this.nombre_poblacion = nombre_poblacion;
 	}
 
+	/**
+	 * Gets the lista arcos.
+	 *
+	 * @return the lista arcos
+	 */
 	public ArrayList<Arco> getLista_arcos() {
 		return lista_arcos;
 	}
 
+	/**
+	 * Sets the lista arcos.
+	 *
+	 * @param lista_arcos the new lista arcos
+	 */
 	public void setLista_arcos(ArrayList<Arco> lista_arcos) {
 		this.lista_arcos = lista_arcos;
 	}
 
+	/**
+	 * Gets the lista nodos.
+	 *
+	 * @return the lista nodos
+	 */
 	public ArrayList<Nodo> getLista_nodos() {
 		return lista_nodos;
 	}
 
+	/**
+	 * Sets the lista nodos.
+	 *
+	 * @param lista_nodos the new lista nodos
+	 */
 	public void setLista_nodos(ArrayList<Nodo> lista_nodos) {
 		this.lista_nodos = lista_nodos;
 	}
 
+	/**
+	 * Adds the nodo.
+	 *
+	 * @param nodo the nodo
+	 */
 	public void addNodo(Nodo nodo) {
 		if (this.lista_nodos == null) {
 			this.lista_nodos = new ArrayList<Nodo>();
@@ -107,6 +160,11 @@ public class Grafo {
 		this.lista_nodos.add(nodo);
 	}
 
+	/**
+	 * Adds the arco.
+	 *
+	 * @param arco the arco
+	 */
 	public void addArco(Arco arco) {
 		if (this.lista_arcos == null) {
 			this.lista_arcos = new ArrayList<Arco>();
@@ -114,11 +172,21 @@ public class Grafo {
 		this.lista_arcos.add(arco);
 	}
 
+	/**
+	 * To string.
+	 *
+	 * @return the string
+	 */
 	public String toString() {
 		return "Grafo{" + "Poblacion=" + this.nombre_poblacion + ", nodos=" + this.lista_nodos.toString() + ", arcos="
 				+ this.lista_arcos.toString() + '}';
 	}
 
+	/**
+	 * Gets the xmaxima.
+	 *
+	 * @return the xmaxima
+	 */
 	public double getXmaxima() {
 		double max = Double.MIN_VALUE;
 		for (Nodo n : this.lista_nodos) {
@@ -129,6 +197,11 @@ public class Grafo {
 		return max;
 	}
 
+	/**
+	 * Gets the ymaxima.
+	 *
+	 * @return the ymaxima
+	 */
 	public double getYmaxima() {
 		double max = Double.MIN_VALUE;
 		for (Nodo n : this.lista_nodos) {
@@ -139,6 +212,11 @@ public class Grafo {
 		return max;
 	}
 
+	/**
+	 * Gets the xminima.
+	 *
+	 * @return the xminima
+	 */
 	public double getXminima() {
 		double min = Double.MAX_VALUE;
 		for (Nodo n : this.lista_nodos) {
@@ -149,6 +227,11 @@ public class Grafo {
 		return min;
 	}
 
+	/**
+	 * Gets the yminima.
+	 *
+	 * @return the yminima
+	 */
 	public double getYminima() {
 		double min = Double.MAX_VALUE;
 		for (Nodo n : this.lista_nodos) {
@@ -159,6 +242,12 @@ public class Grafo {
 		return min;
 	}
 
+	/**
+	 * Dibujar grafo.
+	 *
+	 * @param raiz the raiz
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public void dibujarGrafo(Nodo raiz) throws IOException {
 		int width = 2000;
 		int height = 2000;
@@ -204,6 +293,9 @@ public class Grafo {
 		ImageIO.write(bufferedImage, "png", file);
 	}
 
+	/**
+	 * Crear graphml.
+	 */
 	public void crear_graphml() {
 
 		ArrayList<String> attr_names = new ArrayList<String>();
@@ -333,18 +425,30 @@ public class Grafo {
 		}
 	}
 
-	// metodo que devuelve el nombre de la poblacion
+	/**
+	 * Separar nombre. metodo que devuelve el nombre de la poblacion
+	 * 
+	 * @return the string
+	 */
 	public String separarNombre() {
 		return this.nombre_poblacion.split(",")[0];
 	}
 
+	/**
+	 * Partition.
+	 *
+	 * @param a     the a
+	 * @param left  the left
+	 * @param right the right
+	 * @return the int
+	 */
 	public int partition(ArrayList<Arco> a, int left, int right) {
 		return HoarePartition(a, left, right); // Using Hoare partition
 	}
 
 	/**
-	 * Method implementing Hoare's partition
-	 * 
+	 * Method implementing Hoare's partition.
+	 *
 	 * @param a     The array to partition
 	 * @param left  Starting index of subarray
 	 * @param right Finish index of subarray
@@ -371,8 +475,6 @@ public class Grafo {
 
 	/**
 	 * Wrapper method for calling the actual, divide and conquer, quicksort method.
-	 * 
-	 * @param array The array to sort. Ii is sorted at the end.
 	 */
 	public void quicksort() {
 		quicksortRec(this.lista_arcos, 0, this.lista_arcos.size() - 1);
@@ -393,6 +495,13 @@ public class Grafo {
 		}
 	}
 
+	/**
+	 * Find.
+	 *
+	 * @param componentesConexas the componentes conexas
+	 * @param nodo               the nodo
+	 * @return the int
+	 */
 	public int find(ArrayList<ArrayList<Nodo>> componentesConexas, Nodo nodo) {
 		int pos = -1;
 		for (int i = 0; i < componentesConexas.size() && pos == -1; i++) {
@@ -403,6 +512,13 @@ public class Grafo {
 		return pos;
 	}
 
+	/**
+	 * Union.
+	 *
+	 * @param componentesConexas the componentes conexas
+	 * @param x                  the x
+	 * @param y                  the y
+	 */
 	public void union(ArrayList<ArrayList<Nodo>> componentesConexas, int x, int y) {
 		for (int i = 0; i < componentesConexas.get(y).size(); i++) {
 			componentesConexas.get(x).add(componentesConexas.get(y).get(i));
@@ -410,6 +526,11 @@ public class Grafo {
 		componentesConexas.remove(y);
 	}
 
+	/**
+	 * Kruskal.
+	 *
+	 * @return the grafo
+	 */
 	public Grafo kruskal() {
 		Grafo grafo = new Grafo();
 		ArrayList<Arco> arcos = new ArrayList<Arco>();
@@ -444,6 +565,11 @@ public class Grafo {
 		return grafo;
 	}
 
+	/**
+	 * Prim.
+	 *
+	 * @return the grafo
+	 */
 	public Grafo prim() {
 		Grafo grafo = new Grafo();
 		ArrayList<Arco> arcos = new ArrayList<Arco>();
@@ -478,6 +604,13 @@ public class Grafo {
 		return grafo;
 	}
 
+	/**
+	 * Encontrar.
+	 *
+	 * @param b               the b
+	 * @param arcos_ordenados the arcos ordenados
+	 * @return the arco
+	 */
 	public Arco encontrar(HashSet<Nodo> b, ArrayList<Arco> arcos_ordenados) {
 		Arco a = null;
 		for (int i = 0; i < arcos_ordenados.size() && a == null; i++) {
@@ -491,6 +624,12 @@ public class Grafo {
 		return a;
 	}
 
+	/**
+	 * Cuenta nodos hoja.
+	 *
+	 * @param nodo the nodo
+	 * @return the int
+	 */
 	public int cuenta_nodos_hoja(Nodo nodo) {
 		int suma = 0;
 		ArrayList<Arco> arcos_anexos = new ArrayList<Arco>();
@@ -507,6 +646,13 @@ public class Grafo {
 		return suma;
 	}
 
+	/**
+	 * Cuenta nodos hoja.
+	 *
+	 * @param nodo the nodo
+	 * @param arco the arco
+	 * @return the int
+	 */
 	public int cuenta_nodos_hoja(Nodo nodo, Arco arco) {
 		int hojas = 0;
 		for (Nodo n : lista_nodos) {
@@ -517,6 +663,15 @@ public class Grafo {
 		return hojas;
 	}
 
+	/**
+	 * Cuenta distancia nodos hoja.
+	 *
+	 * @param nodo   the nodo
+	 * @param media  the media
+	 * @param minimo the minimo
+	 * @param arcos  the arcos
+	 * @return the int
+	 */
 	public int cuenta_distancia_nodos_hoja(Nodo nodo, int media, double minimo, ArrayList<Arco> arcos) {
 
 		int suma = 0;
@@ -535,6 +690,17 @@ public class Grafo {
 
 	}
 
+	/**
+	 * Cuenta distancia nodos hoja.
+	 *
+	 * @param nodo      the nodo
+	 * @param arco      the arco
+	 * @param acumulado the acumulado
+	 * @param media     the media
+	 * @param minimo    the minimo
+	 * @param arcos     the arcos
+	 * @return the int
+	 */
 	public int cuenta_distancia_nodos_hoja(Nodo nodo, Arco arco, int acumulado, int media, double minimo,
 			ArrayList<Arco> arcos) {
 		int total = 0;
@@ -564,6 +730,11 @@ public class Grafo {
 		return total;
 	}
 
+	/**
+	 * Encontrar raiz.
+	 *
+	 * @return the nodo
+	 */
 	public Nodo encontrarRaiz() {
 		Nodo raiz = new Nodo();
 		int media = 0;
