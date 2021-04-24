@@ -159,7 +159,7 @@ public class Grafo {
 		return min;
 	}
 
-	public void dibujarGrafo() throws IOException {
+	public void dibujarGrafo(Nodo raiz) throws IOException {
 		int width = 2000;
 		int height = 2000;
 
@@ -183,8 +183,8 @@ public class Grafo {
 
 		for (Nodo n : this.lista_nodos) {
 
-			if (n.getId_nodo().equalsIgnoreCase("765350888")) {
-				g2d.setColor(Color.BLUE);
+			if (n.getId_nodo().equalsIgnoreCase(raiz.getId_nodo())) {
+				g2d.setColor(Color.GREEN);
 			} else {
 				g2d.setColor(Color.RED);
 			}
@@ -491,51 +491,6 @@ public class Grafo {
 		return a;
 	}
 
-	public void cuenta_nodos_subArbolAux(Nodo nodo) {
-		ArrayList<Arco> arcos_anexos = new ArrayList<Arco>();
-		arcos_anexos = nodo.getArcosIncidentes(this.lista_arcos);
-
-		for (Arco a : arcos_anexos) {
-			if (a.getNodo_origen().equals(nodo)) {
-				System.out.println(cuenta_nodos_subArbol(a.getNodo_destino(), a));
-			} else if (a.getNodo_destino().equals(nodo)) {
-				System.out.println(cuenta_nodos_subArbol(a.getNodo_origen(), a));
-			}
-
-		}
-	}
-
-	public int cuenta_nodos_subArbol(Nodo nodo, Arco arco) {
-		int total = 1;
-		ArrayList<Arco> arcos_anexos = new ArrayList<Arco>();
-		arcos_anexos = nodo.getArcosIncidentes(this.lista_arcos);
-		if (arcos_anexos.size() == 1) {
-			return total;
-		}
-
-		for (Arco a : arcos_anexos) {
-			if (a != arco) {
-				if (a.getNodo_origen().equals(nodo)) {
-					total += cuenta_nodos_subArbol(a.getNodo_destino(), a);
-				} else if (a.getNodo_destino().equals(nodo)) {
-					total += cuenta_nodos_subArbol(a.getNodo_origen(), a);
-				}
-
-			}
-
-		}
-
-		return total;
-	}
-
-	public void prueba() {
-		for (Nodo n : this.lista_nodos) {
-			if (n.getId_nodo().equalsIgnoreCase("1050180142")) {
-				cuenta_nodos_subArbolAux(n);
-			}
-		}
-	}
-
 	public int cuenta_nodos_hoja(Nodo nodo) {
 		int suma = 0;
 		ArrayList<Arco> arcos_anexos = new ArrayList<Arco>();
@@ -554,21 +509,12 @@ public class Grafo {
 
 	public int cuenta_nodos_hoja(Nodo nodo, Arco arco) {
 		int hojas = 0;
-		for(Nodo n : lista_nodos) {
-			if(n.getArcosIncidentes(lista_arcos).size() == 1) {
+		for (Nodo n : lista_nodos) {
+			if (n.getArcosIncidentes(lista_arcos).size() == 1) {
 				hojas++;
 			}
 		}
 		return hojas;
-	}
-	
-
-	public void prueba_altura() {
-		for (Nodo n : this.lista_nodos) {
-
-			System.out.println(cuenta_nodos_hoja(n));
-
-		}
 	}
 
 	public int cuenta_distancia_nodos_hoja(Nodo nodo, int media, double minimo, ArrayList<Arco> arcos) {
@@ -589,13 +535,13 @@ public class Grafo {
 
 	}
 
-	public int cuenta_distancia_nodos_hoja(Nodo nodo, Arco arco, int acumulado, int media, double minimo, ArrayList<Arco> arcos) {
+	public int cuenta_distancia_nodos_hoja(Nodo nodo, Arco arco, int acumulado, int media, double minimo,
+			ArrayList<Arco> arcos) {
 		int total = 0;
 		ArrayList<Arco> arcos_anexos = new ArrayList<Arco>();
 		arcos_anexos = nodo.getArcosIncidentes(arcos);
-		
-		
-		double check = acumulado/media;
+
+		double check = acumulado / media;
 		if (check > minimo)
 			return Integer.MAX_VALUE;
 		if (arcos_anexos.size() == 0) {
@@ -605,49 +551,40 @@ public class Grafo {
 				if (a != arco) {
 					arcos.remove(a);
 					if (a.getNodo_origen().equals(nodo)) {
-						total += cuenta_distancia_nodos_hoja(a.getNodo_destino(), a, acumulado + 1, media, minimo,arcos);
+						total += cuenta_distancia_nodos_hoja(a.getNodo_destino(), a, acumulado + 1, media, minimo,
+								arcos);
 					} else if (a.getNodo_destino().equals(nodo)) {
-						total += cuenta_distancia_nodos_hoja(a.getNodo_origen(), a, acumulado + 1, media, minimo,arcos);
+						total += cuenta_distancia_nodos_hoja(a.getNodo_origen(), a, acumulado + 1, media, minimo,
+								arcos);
 					}
 				}
 			}
 		}
-		
-		
+
 		return total;
 	}
 
-	public void prueba_distancia() {
-		for (Nodo n : this.lista_nodos) {
-
-			System.out.println(cuenta_distancia_nodos_hoja(n, 0, 999, lista_arcos));
-
-		}
-	}
-	
 	public Nodo encontrarRaiz() {
 		Nodo raiz = new Nodo();
 		int media = 0;
 		int distancia = 0;
 		double aux = Integer.MAX_VALUE;
 		media = cuenta_nodos_hoja(lista_nodos.get(0));
-		
-		
-		for(Nodo n : lista_nodos) {
+
+		for (Nodo n : lista_nodos) {
 			ArrayList<Arco> arcos = new ArrayList<Arco>();
-			for(Arco a : lista_arcos)
+			for (Arco a : lista_arcos)
 				arcos.add(a);
-			
+
 			distancia = cuenta_distancia_nodos_hoja(n, media, aux, arcos);
-			if((distancia/media) < aux) {
+			if ((distancia / media) < aux) {
 				raiz = n;
-				aux = (distancia/media);
-				
+				aux = (distancia / media);
+
 			}
 		}
-		
-		return raiz;
-		
-	}
 
+		return raiz;
+
+	}
 }

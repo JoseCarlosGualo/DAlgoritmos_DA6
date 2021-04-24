@@ -22,38 +22,18 @@ public class Principal {
 			g.quicksort();
 			Grafo kruskal = g.kruskal();
 			lista_kruskal.add(kruskal);
-			lista_kruskal.get(i).dibujarGrafo();
 			Nodo raiz = lista_kruskal.get(i).encontrarRaiz();
+			lista_kruskal.get(i).dibujarGrafo(raiz);
 			lista_raices.add(raiz);
-			System.out.println(lista_kruskal.get(i).nombre_poblacion+" Raiz: "+raiz.toString());
+			System.out.println(lista_kruskal.get(i).nombre_poblacion + " Raiz: " + raiz.toString());
 		}
-		
+
 		Grafo raices = generarGrafoRaices(lista_raices);
-		
+
 		Grafo raices_kruskal = raices.kruskal();
 		Nodo raiz_final = raices_kruskal.encontrarRaiz();
-		System.out.println("RAIZ final :"+raiz_final.toString());
-		
-		
-		
-
-		/*
-		 * lista_grafos = getGrafosFromXML(lista_archivos);
-		 * 
-		 * for (int i = 0; i < lista_grafos.size(); i++) { Grafo g =
-		 * lista_grafos.get(i); g.quicksort(); Grafo prim = g.prim();
-		 * lista_prim.add(prim); }
-		 * 
-		 * for (int i = 0; i < lista_kruskal.size(); i++) {
-		 * lista_kruskal.get(i).dibujarGrafo(); }
-		 * 
-		 * for (int i = 0; i < lista_prim.size(); i++) {
-		 * lista_prim.get(i).dibujarGrafo(); }
-		 */
-
-		//lista_kruskal.get(3).prueba_distancia();
-		
-		
+		raices_kruskal.dibujarGrafo(raiz_final);
+		System.out.println("RAIZ final :" + raiz_final.toString());
 
 	}
 
@@ -81,21 +61,21 @@ public class Principal {
 		}
 		return lista_grafos;
 	}
-	
+
 	public static Grafo generarGrafoRaices(ArrayList<Nodo> lista_raices) {
 		Grafo g = new Grafo();
 		g.setNombre_poblacion("Raices poblaciones ");
 		ArrayList<Arco> arcos = get_arcos_unitarios(lista_raices);
-		
+
 		for (Nodo n : lista_raices)
 			g.addNodo(n);
 		for (Arco a : arcos) {
 			g.addArco(a);
 		}
-		
+
 		return g;
 	}
-	
+
 	public static ArrayList<Arco> get_arcos_unitarios(ArrayList<Nodo> lista_nodos_raices) {
 		int i = 0;
 		ArrayList<Arco> lista_arcos_unitarios = new ArrayList<Arco>();
@@ -105,9 +85,6 @@ public class Principal {
 					lista_arcos_unitarios.add(new Arco("nuevoArco_" + i++, n, n_1,
 							Math.sqrt((Math.pow((n_1.getX() - n.getX()), 2) + (Math.pow((n_1.getY() - n.getY()), 2))))
 									* 100000));
-					// System.out.println(Math
-					// .sqrt((Math.pow((n_1.getX() - n.getX()), 2) + (Math.pow((n_1.getY() -
-					// n.getY()), 2))))*100000);
 				}
 			}
 		}
