@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-
 import org.xml.sax.SAXException;
 
 public class Principal {
@@ -16,46 +15,45 @@ public class Principal {
 		ArrayList<Grafo> lista_grafos = getGrafosFromXML(lista_archivos);
 		ArrayList<Grafo> lista_kruskal = new ArrayList<Grafo>();
 		ArrayList<Grafo> lista_prim = new ArrayList<Grafo>();
-		ArrayList<Nodo> nodos_raiz = new ArrayList<Nodo>();
-		Grafo grafo_principal = new Grafo();
-		int nodos_totales = 0;
+		ArrayList<Nodo> lista_raices = new ArrayList<Nodo>();
 
 		for (int i = 0; i < lista_grafos.size(); i++) {
 			Grafo g = lista_grafos.get(i);
 			g.quicksort();
 			Grafo kruskal = g.kruskal();
 			lista_kruskal.add(kruskal);
-			Nodo nodo = lista_kruskal.get(i).getRootNode();
-			nodos_raiz.add(nodo);
-			grafo_principal.addListaArco(kruskal.getLista_arcos());
-			grafo_principal.addListaNodo(kruskal.getLista_nodos());
-			nodos_totales += kruskal.getLista_nodos().size();
-			// System.out.println(lista_kruskal.get(i).nombre_poblacion + " Raiz: " +
-			// nodo.toString());
+			lista_kruskal.get(i).dibujarGrafo();
+			Nodo raiz = lista_kruskal.get(i).encontrarRaiz();
+			lista_raices.add(raiz);
+			System.out.println(lista_kruskal.get(i).nombre_poblacion+" Raiz: "+raiz.toString());
 		}
-
-		grafo_principal.addListaArco(get_arcos_unitarios(nodos_raiz));
-		System.out.println("En el problema: " + nodos_totales);
-		System.out.println("Nodos grafo principal: " + grafo_principal.getLista_nodos().size());
-		System.out.println("Arcos en principal: " + grafo_principal.getLista_arcos().size());
-		System.out.println("Nodos raiz: " + nodos_raiz.size());
-		System.out.println("poblaciones: " + lista_grafos.size());
-		grafo_principal.setNombre_poblacion("Provincia");
-		grafo_principal.dibujarGrafo();
-		grafo_principal.quicksort();
-		System.out.println("hola");
-		Grafo arbol_minimo_principal = grafo_principal.kruskal();
-		System.out.println(arbol_minimo_principal.getLista_arcos().size());
-		System.out.println(arbol_minimo_principal.getLista_nodos().size());
-		System.out.println("hace kruskal");
-		// Grafo arbol_minimo_principal = grafo_principal.prim();
-		arbol_minimo_principal.setNombre_poblacion("Provincia_kruskal");
-		// arbol_minimo_principal.dibujarGrafo();
-		Nodo nodo_raiz_principal = arbol_minimo_principal.getRootNodeCiu();
-		System.out.println("coge nodo raiz");
-
 		
-		System.out.println(arbol_minimo_principal.nombre_poblacion + " Raiz: " + nodo_raiz_principal.toString());
+		Grafo raices = generarGrafoRaices(lista_raices);
+		
+		Grafo raices_kruskal = raices.kruskal();
+		Nodo raiz_final = raices_kruskal.encontrarRaiz();
+		System.out.println("RAIZ final :"+raiz_final.toString());
+		
+		
+		
+
+		/*
+		 * lista_grafos = getGrafosFromXML(lista_archivos);
+		 * 
+		 * for (int i = 0; i < lista_grafos.size(); i++) { Grafo g =
+		 * lista_grafos.get(i); g.quicksort(); Grafo prim = g.prim();
+		 * lista_prim.add(prim); }
+		 * 
+		 * for (int i = 0; i < lista_kruskal.size(); i++) {
+		 * lista_kruskal.get(i).dibujarGrafo(); }
+		 * 
+		 * for (int i = 0; i < lista_prim.size(); i++) {
+		 * lista_prim.get(i).dibujarGrafo(); }
+		 */
+
+		//lista_kruskal.get(3).prueba_distancia();
+		
+		
 
 	}
 
@@ -83,7 +81,21 @@ public class Principal {
 		}
 		return lista_grafos;
 	}
-
+	
+	public static Grafo generarGrafoRaices(ArrayList<Nodo> lista_raices) {
+		Grafo g = new Grafo();
+		g.setNombre_poblacion("Raices poblaciones ");
+		ArrayList<Arco> arcos = get_arcos_unitarios(lista_raices);
+		
+		for (Nodo n : lista_raices)
+			g.addNodo(n);
+		for (Arco a : arcos) {
+			g.addArco(a);
+		}
+		
+		return g;
+	}
+	
 	public static ArrayList<Arco> get_arcos_unitarios(ArrayList<Nodo> lista_nodos_raices) {
 		int i = 0;
 		ArrayList<Arco> lista_arcos_unitarios = new ArrayList<Arco>();
@@ -105,6 +117,8 @@ public class Principal {
 	public static boolean checkRepetidos(ArrayList<Arco> arcos, Nodo n1, Nodo n2) {
 		for (Arco a : arcos) {
 			if (a.getNodo_destino().equals(n1) && a.getNodo_origen().equals(n2)) {
+				return true;
+			} else if (a.getNodo_destino().equals(n2) && a.getNodo_origen().equals(n1)) {
 				return true;
 			}
 		}
